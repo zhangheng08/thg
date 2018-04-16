@@ -10,7 +10,7 @@ const MemberSchema = mongoose.Schema({
     chineseName:String,
     cv:String,
     email:String,
-    enrolledYear:String,
+    enrolledYear:Number,
     firstName:String,
     introduction:String,
     lastName:String,
@@ -28,12 +28,9 @@ const MemberList = module.exports = mongoose.model('members', MemberSchema);
 
 //MemberList.find() returns all the lists
 module.exports.getAllLists = (callback) => {
-    MemberList.find(callback);
+    MemberList.find(callback).sort({enrolledYear : 1});
 }
 
-module.exports.getAllBriefLists = (callback) => {
-    MemberList.find(callback);
-}
 
 module.exports.findMemberById = (id, callback) => {
 
