@@ -1,0 +1,22 @@
+{
+  "name": "thg",
+  "version": "1.0.0",
+  "description": "tsinghua group",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "@okta/jwt-verifier": "0.0.11",
+    "bibtex-parser": "0.0.0",
+    "body-parser": "~1.17.2",
+    "cors": "~2.8.3",
+    "express": "~4.15.3",
+    "mongoose": "~4.11.0"
+  },
+  "keywords": [
+    "123456"
+  ],
+  "author": "zh",
+  "license": "ISC"
+}
