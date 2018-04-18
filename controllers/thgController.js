@@ -135,11 +135,30 @@ router.post('/parserbibtex', authenticationRequired,(req,res) => {
 
     var bibliography = req.body.bibtexStr;
 
-    var obj = bibtexparser(bibliography);
 
-    console.log(obj);
+    //-------------------------------modify
+    var pdf = req.body.pdf;
+    var slider = req.body.slider;
 
-    memberList.findAndUpdate(id, obj, (err, list) => {
+    var obj;
+
+    var bibtexObj = bibtexparser(bibliography);
+
+    for(var key in bibtexObj) {
+
+        obj = bibtexObj[key];
+        obj['HEADER'] = key;
+        obj['pdf'] = pdf;
+        obj['slider'] = slider;
+        console.log("333333333333: " + JSON.stringify(bibtexObj[key], null, 2));
+        break;
+
+    }
+
+    console.log(JSON.stringify(obj, null, 2));
+
+    memberList.findAndUpdate(id, obj, function (err, list) {
+        //-------------------------------modify
 
         if(err) {
             res.json({success:false, message: `Failed to update the list. Error: ${err}`});
@@ -155,7 +174,7 @@ router.post('/parserbibtex', authenticationRequired,(req,res) => {
 
 //POST HTTP method to /members
 
-router.post('/add', authenticationRequired, (req,res,next) => {
+router.post('/add', authenticationRequired, function (req,res,next) {//-------------------------------modify
 
     let newList = new memberList({
         active: req.body.active,
@@ -175,19 +194,20 @@ router.post('/add', authenticationRequired, (req,res,next) => {
         publications: []
     });
 
-    memberList.addList(newList,(err, list) => {
+    memberList.addList(newList, function (err, list) {//-------------------------------modify
+
     if(err) {
         res.json({success: false, message: `Failed to create a new list. Error: ${err}`});
-    }
-    else
+    } else
         res.json({success:true, message: "Added successfully."});
-
     });
+
 });
 
-router.post('/addBrief', authenticationRequired,( req, res, next) => {
+router.post('/addBrief', authenticationRequired, function ( req, res, next) {//-------------------------------modify
 
     let newBriefList = new membersBriefList({
+        id: req.body.memberId,
         active: req.body.active,
         avatar: req.body.avatar,
         brief: req.body.brief,
@@ -196,7 +216,7 @@ router.post('/addBrief', authenticationRequired,( req, res, next) => {
         position: req.body.position
     });
 
-    membersBriefList.addList(newBriefList,(err, list) => {
+    membersBriefList.addList(newBriefList, function (err, list) {//-------------------------------modify
     if(err) {
         res.json({success: false, message: `Failed to create a new list. Error: ${err}`});
     } else res.json({success:true, message: "Added successfully."});
@@ -204,7 +224,7 @@ router.post('/addBrief', authenticationRequired,( req, res, next) => {
 
 });
 
-router.post('/findAndUpdate', authenticationRequired,(req, res) => {
+router.post('/findAndUpdate', authenticationRequired, function(req, res) {//-------------------------------modify
 
     let id = req.body._id;
 
@@ -216,7 +236,7 @@ router.post('/findAndUpdate', authenticationRequired,(req, res) => {
     });
 
 
-    memberList.findAndUpdate(id, plist, (err, list) => {
+    memberList.findAndUpdate(id, plist, function (err, list) {//-------------------------------modify
 
             if(err) {
                 res.json({success:false, message: `Failed to update the list. Error: ${err}`});
@@ -228,14 +248,15 @@ router.post('/findAndUpdate', authenticationRequired,(req, res) => {
 
 });
 
-router.post('/update', authenticationRequired,(req, res) => {
+router.post('/update', authenticationRequired, function(req, res) {//-------------------------------modify
 
     let id = req.body._id;
     let jsonString = req.body.objmod;
     console.log(jsonString);
 
+    membersBriefList.updateById(id, jsonString, function (err, list) {});//-------------------------------modify
 
-    memberList.updateById(id, jsonString, (err, list) => {
+    memberList.updateById(id, jsonString, function (err, list) {//-------------------------------modify
 
     if(err) {
         res.json({success:false, message: `Failed to update the list. Error: ${err}`});
@@ -247,13 +268,13 @@ router.post('/update', authenticationRequired,(req, res) => {
 
 });
 
-router.post('/deletePublication', authenticationRequired,(req, res) => {
+router.post('/deletePublication', authenticationRequired, function (req, res) {//-------------------------------modify
 
     let id = req.body._id;
     let pid = req.body.pid;
 
 
-    memberList.deletePublicationById(id, pid, (err, list) => {
+    memberList.deletePublicationById(id, pid, function (err, list) {//-------------------------------modify
 
         if(err) {
             res.json({success:false, message: `Failed to update the list. Error: ${err}`});
@@ -265,12 +286,11 @@ router.post('/deletePublication', authenticationRequired,(req, res) => {
 
 });
 
-//DELETE HTTP method to /members. Here, we pass in a param which is the object id.
-router.delete('/:id', authenticationRequired,(req,res,next)=> {
+router.delete('/:id', authenticationRequired, function(req,res,next) {//-------------------------------modify
     //access the parameter which is the id of the item to be deleted
     let id = req.params.id;
 //Call the model method deleteListById
-    memberList.deleteListById(id,(err,list) => {
+    memberList.deleteListById(id, function(err,list) {//-------------------------------modify
         if(err) {
             res.json({success:false, message: `Failed to delete the list. Error: ${err}`});
         }

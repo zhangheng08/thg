@@ -19,7 +19,18 @@ const MemberSchema = mongoose.Schema({
     position:String,
     publications:[
         {
-            json:Object
+            pdf:String,//-------------------------------modify
+            slider:String,
+            entryType:String,
+            TITLE:String,
+            AUTHOR:String,
+            JOURNAL:String,
+            VOLUME:String,
+            NUMBER:String,
+            PAGES:String,
+            YEAR:String,
+            PUBLISHER:String,
+            HEADER:String
         }]
 
 });
@@ -52,7 +63,7 @@ module.exports.findAndUpdate = (id, options, callback) => {
 
         if(arr == null || arr == undefined) arr = [];
 
-        var obj = {json:options};
+        var obj = options;//{json:options};//-------------------------------modify
 
         arr.push(obj);
 
